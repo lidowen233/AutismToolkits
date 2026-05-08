@@ -5,30 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SensoryGrounds</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black: #0a0a0a;
-      --white: #f5f4f0;
-      --gray: #888;
-      --accent: #e8e4dc;
-      --line: rgba(255,255,255,0.08);
+      --pink:   #F2899A;
+      --yellow: #F9C440;
+      --blue:   #89BAD0;
+      --green:  #A8CC78;
+      --pink-light:   #FDE8EC;
+      --yellow-light: #FEF4D0;
+      --blue-light:   #E0F0F7;
+      --green-light:  #EAF5D8;
+      --dark:   #3a3228;
+      --mid:    #7a6f63;
+      --bg:     #fffdf8;
+      --white:  #ffffff;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--black);
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Chalkboard SE', 'Chalkboard', 'Comic Sans MS', 'Nunito', cursive;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── NAV ── */
+    .blob-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.22;
+    }
+    .blob-1 { width: 500px; height: 500px; background: var(--pink);   top: -100px; left: -100px; }
+    .blob-2 { width: 400px; height: 400px; background: var(--yellow); top: 200px;  right: -80px; }
+    .blob-3 { width: 350px; height: 350px; background: var(--blue);   bottom: 100px; left: 10%; }
+    .blob-4 { width: 300px; height: 300px; background: var(--green);  bottom: -60px; right: 15%; }
+
+    /* NAV */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -36,365 +60,531 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.5rem 3rem;
-      border-bottom: 1px solid var(--line);
+      padding: 1.2rem 3rem;
+      background: rgba(255,253,248,0.85);
       backdrop-filter: blur(12px);
-      background: rgba(10,10,10,0.6);
+      border-bottom: 2.5px dashed rgba(58,50,40,0.1);
     }
 
     .nav-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--white);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--dark);
       text-decoration: none;
-    }
-
-    .nav-tag {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray);
-    }
-
-    /* ── HERO ── */
-    .hero {
-      padding-top: 80px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .hero-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 2rem;
-    }
-
-    .hero-title {
-      font-size: clamp(3rem, 8vw, 7rem);
-      font-weight: 300;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--gray);
-    }
-
-    .hero-sub {
-      font-size: 15px;
-      color: var(--gray);
-      text-align: center;
-      max-width: 380px;
-      line-height: 1.7;
-      margin-bottom: 3.5rem;
-    }
-
-    .scroll-hint {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
-      display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 8px;
     }
 
+    .nav-dot {
+      display: inline-block;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      animation: bounce-dot 2s ease-in-out infinite;
+    }
+    .nav-dot-p { background: var(--pink); }
+    .nav-dot-y { background: var(--yellow); animation-delay: 0.2s; }
+    .nav-dot-b { background: var(--blue);   animation-delay: 0.4s; }
+
+    @keyframes bounce-dot {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-5px); }
+    }
+
+    .nav-tag {
+      font-size: 12px;
+      background: var(--yellow-light);
+      color: #b8820a;
+      border: 2px solid var(--yellow);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-weight: 700;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding-top: 90px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 2px solid var(--pink);
+      border-radius: 20px;
+      padding: 6px 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    .word-sensory {
+      color: var(--pink);
+      display: inline-block;
+      animation: wiggle 3s ease-in-out infinite;
+    }
+    .word-grounds {
+      color: var(--blue);
+      display: inline-block;
+      animation: wiggle 3s ease-in-out infinite 0.3s;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-1deg); }
+      50%       { transform: rotate(1.5deg); }
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--mid);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      font-family: 'Nunito', cursive;
+      font-weight: 400;
+    }
+
+    .zone-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .pill {
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 2.5px solid;
+    }
+    .pill-pink   { background: var(--pink-light);   color: #c0536a; border-color: var(--pink); }
+    .pill-yellow { background: var(--yellow-light);  color: #b8820a; border-color: var(--yellow); }
+    .pill-blue   { background: var(--blue-light);    color: #3a7a98; border-color: var(--blue); }
+    .pill-green  { background: var(--green-light);   color: #5a8a2a; border-color: var(--green); }
+
+    .scroll-hint {
+      font-size: 12px;
+      color: var(--mid);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Nunito', cursive;
+    }
     .scroll-hint::after {
       content: '';
-      display: block;
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+      width: 2px; height: 44px;
+      background: linear-gradient(to bottom, var(--pink), transparent);
+      border-radius: 2px;
       animation: drop 1.8s ease-in-out infinite;
     }
-
     @keyframes drop {
-      0%, 100% { opacity: 0.3; transform: scaleY(1) translateY(0); }
-      50% { opacity: 1; transform: scaleY(1.1) translateY(4px); }
+      0%, 100% { opacity: 0.4; transform: translateY(0); }
+      50%       { opacity: 1;   transform: translateY(6px); }
     }
 
-    /* ── VIDEO SECTION ── */
+    /* VIDEO */
     .video-section {
-      padding: 6rem 3rem;
-      max-width: 1200px;
+      position: relative;
+      z-index: 1;
+      padding: 5rem 3rem;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     .section-header {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
       margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--line);
+    }
+
+    .section-dot {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.25em;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--gray);
+      color: var(--mid);
     }
 
-    .section-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: rgba(255,255,255,0.15);
+    .section-line {
+      flex: 1;
+      height: 2px;
+      border-radius: 2px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(58,50,40,0.12) 0px, rgba(58,50,40,0.12) 6px,
+        transparent 6px, transparent 12px
+      );
     }
 
-    /* Video wrapper — 16:9 */
+    .video-card {
+      background: var(--white);
+      border-radius: 24px;
+      border: 3px solid rgba(58,50,40,0.07);
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(58,50,40,0.07), 0 0 0 6px rgba(242,137,154,0.07);
+    }
+
     .video-wrapper {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: #111;
-      border: 1px solid var(--line);
-      overflow: hidden;
+      background: #f0ece5;
     }
 
     .video-wrapper video {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    /* Custom play overlay */
     .play-overlay {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,0.4);
+      background: rgba(255,253,248,0.3);
       cursor: pointer;
       transition: background 0.3s;
     }
-
-    .play-overlay:hover { background: rgba(0,0,0,0.2); }
-
+    .play-overlay:hover { background: rgba(255,253,248,0.1); }
     .play-overlay.hidden { display: none; }
 
     .play-btn {
-      width: 72px;
-      height: 72px;
-      border: 1px solid rgba(255,255,255,0.4);
+      width: 80px; height: 80px;
       border-radius: 50%;
+      background: var(--pink);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.2s, border-color 0.2s;
+      box-shadow: 0 4px 24px rgba(242,137,154,0.55);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-
     .play-overlay:hover .play-btn {
-      transform: scale(1.08);
-      border-color: rgba(255,255,255,0.8);
+      transform: scale(1.1);
+      box-shadow: 0 6px 32px rgba(242,137,154,0.75);
     }
-
     .play-btn svg {
-      width: 22px;
-      height: 22px;
+      width: 26px; height: 26px;
       fill: white;
-      margin-left: 3px;
+      margin-left: 4px;
     }
 
-    /* TODO badge */
-    .todo-badge {
+    .video-footer {
+      padding: 1.2rem 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px dashed rgba(58,50,40,0.08);
+    }
+
+    .coming-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 4px;
-      padding: 6px 14px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-top: 1.5rem;
+      gap: 8px;
+      background: var(--yellow-light);
+      border: 2px solid var(--yellow);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #b8820a;
     }
 
-    .todo-dot {
-      width: 6px; height: 6px;
+    .live-dot {
+      width: 8px; height: 8px;
       border-radius: 50%;
-      background: #ff6b35;
+      background: var(--yellow);
       animation: pulse 2s ease-in-out infinite;
     }
-
     @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.3); }
     }
 
-    /* ── INFO GRID ── */
+    /* ZONES */
+    .zones-section {
+      position: relative;
+      z-index: 1;
+      padding: 2rem 3rem 5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .zones-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 2rem;
+    }
+
+    .zone-card {
+      border-radius: 20px;
+      padding: 1.8rem 1.5rem;
+      border: 2.5px solid;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .zone-card-pink   { background: var(--pink-light);   border-color: var(--pink); }
+    .zone-card-yellow { background: var(--yellow-light);  border-color: var(--yellow); }
+    .zone-card-blue   { background: var(--blue-light);    border-color: var(--blue); }
+    .zone-card-green  { background: var(--green-light);   border-color: var(--green); }
+
+    .zone-icon { font-size: 32px; line-height: 1; }
+    .zone-name { font-size: 16px; font-weight: 800; color: var(--dark); }
+    .zone-desc {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.6;
+      font-family: 'Nunito', cursive;
+      font-weight: 400;
+    }
+
+    /* INFO */
     .info-section {
-      padding: 4rem 3rem 8rem;
-      max-width: 1200px;
+      position: relative;
+      z-index: 1;
+      padding: 2rem 3rem 8rem;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     .info-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
+      gap: 16px;
+      margin-top: 2rem;
     }
 
-    .info-cell {
-      background: var(--black);
-      padding: 2rem;
+    .info-card {
+      background: var(--white);
+      border-radius: 18px;
+      border: 2.5px solid rgba(58,50,40,0.08);
+      padding: 1.8rem;
     }
 
-    .info-cell-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.25em;
+    .info-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 0.75rem;
+      color: var(--mid);
+      margin-bottom: 0.6rem;
     }
 
-    .info-cell-value {
-      font-size: 15px;
-      color: var(--white);
-      line-height: 1.5;
+    .info-card-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.4;
     }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
-      border-top: 1px solid var(--line);
+      position: relative;
+      z-index: 1;
+      border-top: 2.5px dashed rgba(58,50,40,0.1);
       padding: 2rem 3rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    footer span {
-      font-size: 12px;
-      color: rgba(255,255,255,0.2);
-      font-family: 'DM Mono', monospace;
+    footer > span {
+      font-size: 13px;
+      color: var(--mid);
+      font-weight: 600;
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
-      nav { padding: 1.25rem 1.5rem; }
-      .hero-title { font-size: clamp(2.5rem, 12vw, 4rem); }
-      .video-section, .info-section { padding-left: 1.5rem; padding-right: 1.5rem; }
-      .info-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .footer-dots { display: flex; gap: 8px; }
+    .footer-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 750px) {
+      nav { padding: 1rem 1.5rem; }
+      .video-section, .zones-section, .info-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .zones-grid { grid-template-columns: repeat(2, 1fr); }
+      .info-grid  { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
     }
   </style>
 </head>
 <body>
 
+  <div class="blob-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
   <nav>
-    <a class="nav-logo" href="#">PROJECT TITLE</a>
-    <span class="nav-tag">Unreal Engine 5</span>
+    <a class="nav-logo" href="#">
+      <span class="nav-dot nav-dot-p"></span>
+      <span class="nav-dot nav-dot-y"></span>
+      <span class="nav-dot nav-dot-b"></span>
+      SensoryGrounds
+    </a>
+    <span class="nav-tag">Unreal Engine 5 ✦</span>
   </nav>
 
-  <!-- ── HERO ── -->
   <section class="hero">
-    <p class="hero-label">Unreal Engine 5 — Demo Reel</p>
-    <h1 class="hero-title">Project<br><em>Showcase</em></h1>
+    <div class="hero-badge">✦ UE5 Demo Reel</div>
+    <h1 class="hero-title">
+      <span class="word-sensory">Sensory</span><br>
+      <span class="word-grounds">Grounds</span>
+    </h1>
     <p class="hero-sub">
-      <!-- 改成你的项目描述 -->
-      A real-time interactive experience built with Unreal Engine 5.
+      An evidence-based sensory landscape built in Unreal Engine 5 — where every space, sound, and material has been designed around the needs of autistic children.
     </p>
-    <div class="scroll-hint">scroll</div>
+    <div class="zone-pills">
+      <span class="pill pill-pink">🌸 Refuge</span>
+      <span class="pill pill-yellow">⚡ Engage</span>
+      <span class="pill pill-blue">🧭 Orientation</span>
+      <span class="pill pill-green">🌿 Transition</span>
+    </div>
+    <div class="scroll-hint">scroll to explore</div>
   </section>
 
-  <!-- ── VIDEO ── -->
   <section class="video-section">
     <div class="section-header">
+      <div class="section-dot" style="background:var(--pink)"></div>
       <span class="section-label">Demo Reel</span>
-      <span class="section-num">01</span>
+      <div class="section-line"></div>
+      <span class="section-label" style="color:rgba(58,50,40,0.25)">01</span>
     </div>
 
-    <div class="video-wrapper" id="videoBox">
-      <!--
-        把你的 mp4 文件放到同一个仓库文件夹里，
-        然后把 src 改成文件名，例如：src="demo.mp4"
-      -->
-      <video id="mainVideo" preload="metadata" playsinline>
-        <source src="demo.mp4" type="video/mp4" />
-        您的浏览器不支持 HTML5 视频。
-      </video>
-
-      <div class="play-overlay" id="playOverlay" onclick="togglePlay()">
-        <div class="play-btn">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
+    <div class="video-card">
+      <div class="video-wrapper">
+        <video id="mainVideo" preload="metadata" playsinline>
+          <source src="demo.mp4" type="video/mp4" />
+          您的浏览器不支持 HTML5 视频。
+        </video>
+        <div class="play-overlay" id="playOverlay" onclick="togglePlay()">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div>
-      <span class="todo-badge">
-        <span class="todo-dot"></span>
-        Coming soon — Pixel Streaming interactive mode
-      </span>
+      <div class="video-footer">
+        <span style="font-size:13px;font-weight:700;color:var(--mid)">SensoryGrounds — Full Walkthrough</span>
+        <span class="coming-badge">
+          <span class="live-dot"></span>
+          Pixel Streaming — coming soon
+        </span>
+      </div>
     </div>
   </section>
 
-  <!-- ── INFO ── -->
+  <section class="zones-section">
+    <div class="section-header">
+      <div class="section-dot" style="background:var(--yellow)"></div>
+      <span class="section-label">Four Zones</span>
+      <div class="section-line"></div>
+      <span class="section-label" style="color:rgba(58,50,40,0.25)">02</span>
+    </div>
+
+    <div class="zones-grid">
+      <div class="zone-card zone-card-pink">
+        <div class="zone-icon">🌸</div>
+        <div class="zone-name">Refuge</div>
+        <div class="zone-desc">Calm, low-stimulation spaces for rest and self-regulation.</div>
+      </div>
+      <div class="zone-card zone-card-yellow">
+        <div class="zone-icon">⚡</div>
+        <div class="zone-name">Engage</div>
+        <div class="zone-desc">Interactive environments that invite exploration and play.</div>
+      </div>
+      <div class="zone-card zone-card-blue">
+        <div class="zone-icon">🧭</div>
+        <div class="zone-name">Orientation</div>
+        <div class="zone-desc">Clear wayfinding and predictable spatial structure.</div>
+      </div>
+      <div class="zone-card zone-card-green">
+        <div class="zone-icon">🌿</div>
+        <div class="zone-name">Transition</div>
+        <div class="zone-desc">Gentle corridors that ease movement between different zones.</div>
+      </div>
+    </div>
+  </section>
+
   <section class="info-section">
     <div class="section-header">
+      <div class="section-dot" style="background:var(--blue)"></div>
       <span class="section-label">Project Info</span>
-      <span class="section-num">02</span>
+      <div class="section-line"></div>
+      <span class="section-label" style="color:rgba(58,50,40,0.25)">03</span>
     </div>
 
     <div class="info-grid">
-      <div class="info-cell">
-        <p class="info-cell-label">Engine</p>
-        <p class="info-cell-value">Unreal Engine 5</p>
+      <div class="info-card">
+        <p class="info-card-label">Engine</p>
+        <p class="info-card-value">Unreal Engine 5</p>
       </div>
-      <div class="info-cell">
-        <p class="info-cell-label">Status</p>
-        <p class="info-cell-value">In Development</p>
+      <div class="info-card">
+        <p class="info-card-label">Status</p>
+        <p class="info-card-value">In Development</p>
       </div>
-      <div class="info-cell">
-        <p class="info-cell-label">Interaction</p>
-        <p class="info-cell-value">Pixel Streaming<br><span style="color:var(--gray);font-size:13px">— coming soon</span></p>
+      <div class="info-card">
+        <p class="info-card-label">Interaction</p>
+        <p class="info-card-value">Pixel Streaming<br><span style="color:var(--mid);font-size:13px;font-weight:400">— coming soon</span></p>
       </div>
-      <!-- 可以自己加更多格子 -->
     </div>
   </section>
 
   <footer>
     <span>© 2025 Shiyun</span>
+    <div class="footer-dots">
+      <span class="footer-dot" style="background:var(--pink)"></span>
+      <span class="footer-dot" style="background:var(--yellow)"></span>
+      <span class="footer-dot" style="background:var(--blue)"></span>
+      <span class="footer-dot" style="background:var(--green)"></span>
+    </div>
     <span>Built with Unreal Engine 5</span>
   </footer>
 
   <script>
     const video = document.getElementById('mainVideo');
     const overlay = document.getElementById('playOverlay');
-
     function togglePlay() {
-      if (video.paused) {
-        video.play();
-        overlay.classList.add('hidden');
-      } else {
-        video.pause();
-        overlay.classList.remove('hidden');
-      }
+      if (video.paused) { video.play(); overlay.classList.add('hidden'); }
+      else { video.pause(); overlay.classList.remove('hidden'); }
     }
-
     video.addEventListener('pause', () => overlay.classList.remove('hidden'));
     video.addEventListener('ended', () => overlay.classList.remove('hidden'));
     video.addEventListener('click', togglePlay);

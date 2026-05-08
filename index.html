@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SensoryGrounds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f4f0;
+      --gray: #888;
+      --accent: #e8e4dc;
+      --line: rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      background: rgba(10,10,10,0.6);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-tag {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gray);
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--gray);
+      text-align: center;
+      max-width: 380px;
+      line-height: 1.7;
+      margin-bottom: 3.5rem;
+    }
+
+    .scroll-hint {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+      animation: drop 1.8s ease-in-out infinite;
+    }
+
+    @keyframes drop {
+      0%, 100% { opacity: 0.3; transform: scaleY(1) translateY(0); }
+      50% { opacity: 1; transform: scaleY(1.1) translateY(4px); }
+    }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      padding: 6rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .section-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* Video wrapper — 16:9 */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #111;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Custom play overlay */
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .play-overlay:hover { background: rgba(0,0,0,0.2); }
+
+    .play-overlay.hidden { display: none; }
+
+    .play-btn {
+      width: 72px;
+      height: 72px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .play-overlay:hover .play-btn {
+      transform: scale(1.08);
+      border-color: rgba(255,255,255,0.8);
+    }
+
+    .play-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
+      margin-left: 3px;
+    }
+
+    /* TODO badge */
+    .todo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 6px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 1.5rem;
+    }
+
+    .todo-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #ff6b35;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ── INFO GRID ── */
+    .info-section {
+      padding: 4rem 3rem 8rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .info-cell {
+      background: var(--black);
+      padding: 2rem;
+    }
+
+    .info-cell-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 0.75rem;
+    }
+
+    .info-cell-value {
+      font-size: 15px;
+      color: var(--white);
+      line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .hero-title { font-size: clamp(2.5rem, 12vw, 4rem); }
+      .video-section, .info-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .info-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#">PROJECT TITLE</a>
+    <span class="nav-tag">Unreal Engine 5</span>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <p class="hero-label">Unreal Engine 5 — Demo Reel</p>
+    <h1 class="hero-title">Project<br><em>Showcase</em></h1>
+    <p class="hero-sub">
+      <!-- 改成你的项目描述 -->
+      A real-time interactive experience built with Unreal Engine 5.
+    </p>
+    <div class="scroll-hint">scroll</div>
+  </section>
+
+  <!-- ── VIDEO ── -->
+  <section class="video-section">
+    <div class="section-header">
+      <span class="section-label">Demo Reel</span>
+      <span class="section-num">01</span>
+    </div>
+
+    <div class="video-wrapper" id="videoBox">
+      <!--
+        把你的 mp4 文件放到同一个仓库文件夹里，
+        然后把 src 改成文件名，例如：src="demo.mp4"
+      -->
+      <video id="mainVideo" preload="metadata" playsinline>
+        <source src="demo.mp4" type="video/mp4" />
+        您的浏览器不支持 HTML5 视频。
+      </video>
+
+      <div class="play-overlay" id="playOverlay" onclick="togglePlay()">
+        <div class="play-btn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <span class="todo-badge">
+        <span class="todo-dot"></span>
+        Coming soon — Pixel Streaming interactive mode
+      </span>
+    </div>
+  </section>
+
+  <!-- ── INFO ── -->
+  <section class="info-section">
+    <div class="section-header">
+      <span class="section-label">Project Info</span>
+      <span class="section-num">02</span>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-cell">
+        <p class="info-cell-label">Engine</p>
+        <p class="info-cell-value">Unreal Engine 5</p>
+      </div>
+      <div class="info-cell">
+        <p class="info-cell-label">Status</p>
+        <p class="info-cell-value">In Development</p>
+      </div>
+      <div class="info-cell">
+        <p class="info-cell-label">Interaction</p>
+        <p class="info-cell-value">Pixel Streaming<br><span style="color:var(--gray);font-size:13px">— coming soon</span></p>
+      </div>
+      <!-- 可以自己加更多格子 -->
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2025 Shiyun</span>
+    <span>Built with Unreal Engine 5</span>
+  </footer>
+
+  <script>
+    const video = document.getElementById('mainVideo');
+    const overlay = document.getElementById('playOverlay');
+
+    function togglePlay() {
+      if (video.paused) {
+        video.play();
+        overlay.classList.add('hidden');
+      } else {
+        video.pause();
+        overlay.classList.remove('hidden');
+      }
+    }
+
+    video.addEventListener('pause', () => overlay.classList.remove('hidden'));
+    video.addEventListener('ended', () => overlay.classList.remove('hidden'));
+    video.addEventListener('click', togglePlay);
+  </script>
+
+</body>
+</html>

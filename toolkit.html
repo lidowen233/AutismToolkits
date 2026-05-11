@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toolkit — SensoryGrounds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink:#F2899A; --yellow:#F9C440; --blue:#89BAD0; --green:#A8CC78;
+      --pink-light:#FDE8EC; --yellow-light:#FEF4D0; --blue-light:#E0F0F7; --green-light:#EAF5D8;
+      --dark:#3a3228; --mid:#7a6f63; --bg:#fffdf8; --white:#ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Chalkboard SE','Chalkboard','Comic Sans MS','Nunito',cursive;
+      min-height: 100vh;
+    }
+
+    /* blobs */
+    .blob-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.18; }
+    .blob-1 { width:400px;height:400px;background:var(--blue);  top:-80px; left:-80px; }
+    .blob-2 { width:350px;height:350px;background:var(--green); bottom:-60px; right:-60px; }
+
+    /* nav */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(255,253,248,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 2.5px dashed rgba(58,50,40,0.1);
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 700; color: var(--dark);
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+    .nav-back:hover { gap: 12px; }
+    .nav-title { font-size: 18px; font-weight: 800; color: var(--dark); }
+    .nav-count {
+      font-size: 12px; font-weight: 700;
+      background: var(--blue-light); color: #3a7a98;
+      border: 2px solid var(--blue); border-radius: 20px;
+      padding: 4px 14px;
+    }
+
+    /* page header */
+    .page-header {
+      position: relative; z-index: 1;
+      padding: 110px 3rem 3rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .page-badge {
+      display: inline-block;
+      background: var(--green-light); color: #5a8a2a;
+      border: 2px solid var(--green); border-radius: 20px;
+      padding: 5px 16px; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800; line-height: 1.05;
+      margin-bottom: 0.8rem;
+    }
+    .page-sub {
+      font-size: 15px; color: var(--mid); max-width: 500px;
+      line-height: 1.7;
+      font-family: 'Nunito', cursive; font-weight: 400;
+    }
+
+    /* filter tabs */
+    .filter-bar {
+      position: relative; z-index: 1;
+      padding: 0 3rem 2.5rem;
+      max-width: 1200px; margin: 0 auto;
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 20px; border-radius: 30px;
+      font-size: 13px; font-weight: 700;
+      border: 2.5px solid; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit; background: var(--white);
+    }
+    .filter-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(58,50,40,0.1); }
+    .filter-btn.active { color: var(--white) !important; }
+    .fb-all   { border-color: var(--dark); color: var(--dark); }
+    .fb-all.active   { background: var(--dark); }
+    .fb-pink  { border-color: var(--pink); color: #c0536a; }
+    .fb-pink.active  { background: var(--pink); }
+    .fb-yellow{ border-color: var(--yellow); color: #b8820a; }
+    .fb-yellow.active{ background: var(--yellow); }
+    .fb-blue  { border-color: var(--blue); color: #3a7a98; }
+    .fb-blue.active  { background: var(--blue); }
+    .fb-green { border-color: var(--green); color: #5a8a2a; }
+    .fb-green.active { background: var(--green); }
+
+    /* image grid */
+    .toolkit-grid {
+      position: relative; z-index: 1;
+      padding: 0 3rem 6rem;
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+
+    .toolkit-img-card {
+      background: var(--white);
+      border-radius: 24px;
+      border: 3px solid rgba(58,50,40,0.07);
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(58,50,40,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .toolkit-img-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 36px rgba(58,50,40,0.11);
+    }
+    .toolkit-img-card img {
+      width: 100%; display: block;
+    }
+    .toolkit-img-footer {
+      padding: 1rem 1.5rem;
+      border-top: 2px dashed rgba(58,50,40,0.08);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .toolkit-img-label {
+      font-size: 13px; font-weight: 700; color: var(--mid);
+    }
+    .zone-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ztag {
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; border: 2px solid;
+    }
+    .ztag-pink   { background:var(--pink-light); color:#c0536a; border-color:var(--pink); }
+    .ztag-yellow { background:var(--yellow-light);color:#b8820a; border-color:var(--yellow); }
+    .ztag-blue   { background:var(--blue-light);  color:#3a7a98; border-color:var(--blue); }
+    .ztag-green  { background:var(--green-light); color:#5a8a2a; border-color:var(--green); }
+
+    /* footer */
+    footer {
+      position: relative; z-index:1;
+      border-top: 2.5px dashed rgba(58,50,40,0.1);
+      padding: 2rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    footer span { font-size:13px; color:var(--mid); font-weight:600; }
+    .footer-dots { display:flex; gap:8px; }
+    .footer-dot { width:10px;height:10px;border-radius:50%;display:inline-block; }
+
+    @media(max-width:700px){
+      nav { padding:1rem 1.5rem; }
+      .page-header,.filter-bar,.toolkit-grid { padding-left:1.5rem;padding-right:1.5rem; }
+      .toolkit-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob-bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+</div>
+
+<nav>
+  <a class="nav-back" href="index.html">← Home</a>
+  <span class="nav-title">Design Toolkit</span>
+  <span class="nav-count">27 Strategies</span>
+</nav>
+
+<div class="page-header">
+  <div class="page-badge">✦ Sensory Design Toolkit</div>
+  <h1 class="page-title">27 Design<br>Strategies</h1>
+  <p class="page-sub">Evidence-based spatial strategies across texture, water, light, colour, topography, and sound — organised by sensory zone.</p>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn fb-all active" onclick="filter('all',this)">🃏 All Zones</button>
+  <button class="filter-btn fb-pink"   onclick="filter('refuge',this)">🌸 Refuge</button>
+  <button class="filter-btn fb-yellow" onclick="filter('engage',this)">⚡ Engage</button>
+  <button class="filter-btn fb-blue"   onclick="filter('orient',this)">🧭 Orientation</button>
+  <button class="filter-btn fb-green"  onclick="filter('transition',this)">🌿 Transition</button>
+</div>
+
+<div class="toolkit-grid">
+
+  <!-- Card 1: toolkit1.png — Texture & Water & Light -->
+  <div class="toolkit-img-card" data-zones="refuge engage orient transition">
+    <img src="toolkit1.png" alt="Texture, Water & Light strategies" loading="lazy" />
+    <div class="toolkit-img-footer">
+      <span class="toolkit-img-label">Texture · Water · Light</span>
+      <div class="zone-tags">
+        <span class="ztag ztag-pink">Refuge</span>
+        <span class="ztag ztag-yellow">Engage</span>
+        <span class="ztag ztag-blue">Orient</span>
+        <span class="ztag ztag-green">Transition</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: toolkitw.png — Color, Topography & Sound -->
+  <div class="toolkit-img-card" data-zones="refuge engage orient transition">
+    <img src="toolkitw.png" alt="Colour, Topography & Sound strategies" loading="lazy" />
+    <div class="toolkit-img-footer">
+      <span class="toolkit-img-label">Colour · Topography · Sound</span>
+      <div class="zone-tags">
+        <span class="ztag ztag-pink">Refuge</span>
+        <span class="ztag ztag-yellow">Engage</span>
+        <span class="ztag ztag-blue">Orient</span>
+        <span class="ztag ztag-green">Transition</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Zone quick links -->
+<div style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 3rem 6rem;">
+  <div style="border-top:2.5px dashed rgba(58,50,40,0.1);padding-top:2.5rem;margin-bottom:2rem;">
+    <span style="font-size:13px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);">Explore by Zone</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+    <a href="refuge.html"     style="display:flex;flex-direction:column;gap:8px;background:var(--pink-light);border:2.5px solid var(--pink);border-radius:18px;padding:1.4rem;text-decoration:none;transition:transform 0.18s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+      <span style="font-size:26px;">🌸</span>
+      <span style="font-size:15px;font-weight:800;color:#c0536a;">Refuge</span>
+      <span style="font-size:12px;color:var(--mid);font-family:'Nunito',cursive;font-weight:400;">View strategies →</span>
+    </a>
+    <a href="engage.html"     style="display:flex;flex-direction:column;gap:8px;background:var(--yellow-light);border:2.5px solid var(--yellow);border-radius:18px;padding:1.4rem;text-decoration:none;transition:transform 0.18s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+      <span style="font-size:26px;">⚡</span>
+      <span style="font-size:15px;font-weight:800;color:#b8820a;">Engage</span>
+      <span style="font-size:12px;color:var(--mid);font-family:'Nunito',cursive;font-weight:400;">View strategies →</span>
+    </a>
+    <a href="orient.html"     style="display:flex;flex-direction:column;gap:8px;background:var(--blue-light);border:2.5px solid var(--blue);border-radius:18px;padding:1.4rem;text-decoration:none;transition:transform 0.18s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+      <span style="font-size:26px;">🧭</span>
+      <span style="font-size:15px;font-weight:800;color:#3a7a98;">Orientation</span>
+      <span style="font-size:12px;color:var(--mid);font-family:'Nunito',cursive;font-weight:400;">View strategies →</span>
+    </a>
+    <a href="transition.html" style="display:flex;flex-direction:column;gap:8px;background:var(--green-light);border:2.5px solid var(--green);border-radius:18px;padding:1.4rem;text-decoration:none;transition:transform 0.18s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+      <span style="font-size:26px;">🌿</span>
+      <span style="font-size:15px;font-weight:800;color:#5a8a2a;">Transition</span>
+      <span style="font-size:12px;color:var(--mid);font-family:'Nunito',cursive;font-weight:400;">View strategies →</span>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Shiyun</span>
+  <div class="footer-dots">
+    <span class="footer-dot" style="background:var(--pink)"></span>
+    <span class="footer-dot" style="background:var(--yellow)"></span>
+    <span class="footer-dot" style="background:var(--blue)"></span>
+    <span class="footer-dot" style="background:var(--green)"></span>
+  </div>
+  <span>SensoryGrounds Toolkit</span>
+</footer>
+
+<script>
+  function filter(zone, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.toolkit-img-card').forEach(card => {
+      if (zone === 'all' || card.dataset.zones.includes(zone)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
